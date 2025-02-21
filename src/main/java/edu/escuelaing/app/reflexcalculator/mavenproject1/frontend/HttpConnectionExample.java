@@ -4,53 +4,49 @@
  */
 package edu.escuelaing.app.reflexcalculator.mavenproject1.frontend;
 
+/**
+ *
+ * @author laura.rortegon
+ */
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 /**
- *
- * @author laura.rortegon
+ * Class for HTTP connection to the backend server
  */
 public class HttpConnectionExample {
-
     private static final String USER_AGENT = "Mozilla/5.0";
-    private static final String GET_URL = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=fb&apikey=Q1QZFVJQ21K7C6XM";
-
-    public static void main(String[] args) throws IOException {
-
-        URL obj = new URL(GET_URL);
+    private static final String BACKEND_URL = "http://localhost:45000/compreflex?comando=";
+    
+    public static String getCommand(String command) throws IOException {
+        String encodedCommand = URLEncoder.encode(command, StandardCharsets.UTF_8);
+        URL obj = new URL(BACKEND_URL + encodedCommand);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
         con.setRequestMethod("GET");
         con.setRequestProperty("User-Agent", USER_AGENT);
-        
-        //The following invocation perform the connection implicitly before getting the code
+   
         int responseCode = con.getResponseCode();
         System.out.println("GET Response Code :: " + responseCode);
         
-        if (responseCode == HttpURLConnection.HTTP_OK) { // success
-            BufferedReader in = new BufferedReader(new InputStreamReader(
-                    con.getInputStream()));
+        if (responseCode == HttpURLConnection.HTTP_OK) { 
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
             String inputLine;
-            StringBuffer response = new StringBuffer();
-
+            StringBuilder response = new StringBuilder();
+            
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
-
-            // print result
-            System.out.println(response.toString());
+            
+            return response.toString();
         } else {
-            System.out.println("GET request not worked");
+            return "{\"error\": \"Backend server error: " + responseCode + "\"}";
         }
-        System.out.println("GET DONE");
     }
-
-    static String getCommand(String command) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-} 
+}
