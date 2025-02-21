@@ -60,10 +60,33 @@ public class HttpBackendServer {
                     break;
                 }
             }
-            
+
+
             //Retornar valores por separado
             String response;
-            if (uriPath.startsWith("/compreflex")) {
+
+            if (uriPath.equals("/") || uriPath.equals("/index.html")) {
+                StringBuilder fileContent = new StringBuilder();
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        HttpBackendServer.class.getClassLoader().getResourceAsStream("index.html"),
+                        StandardCharsets.UTF_8))) {
+
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        fileContent.append(line).append("\n");
+                    }
+
+                    response = "HTTP/1.1 200 OK\r\n" +
+                            "Content-Type: text/html\r\n" +
+                            "\r\n" +
+                            fileContent;
+                } catch (IOException | NullPointerException e) {
+                    response = "HTTP/1.1 404 Not Found\r\n" +
+                            "Content-Type: text/plain\r\n" +
+                            "\r\n" +
+                            "File not found: index.html";
+                }
+            } else if (uriPath.startsWith("/compreflex")) {
                 try {
                     int queryIndex = uriPath.indexOf("?");
                     if (queryIndex != -1) {
