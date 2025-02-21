@@ -49,4 +49,8 @@ public class HttpConnectionExample {
         System.out.println("GET DONE");
     }
 
+    static String getCommand(String command) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 } 

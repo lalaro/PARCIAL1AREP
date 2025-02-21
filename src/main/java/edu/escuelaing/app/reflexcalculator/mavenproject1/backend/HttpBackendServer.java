@@ -18,7 +18,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 
 /**
- * HTTP Server implementation for the backend reflective service
+ * HTTP Server implementation for the backend ReflexCalculator
  */
 public class HttpBackendServer {
     public static void main(String[] args) throws IOException {
@@ -61,6 +61,7 @@ public class HttpBackendServer {
                 }
             }
             
+            //Retornar valores por separado
             String response;
             if (uriPath.startsWith("/compreflex")) {
                 try {
@@ -70,7 +71,8 @@ public class HttpBackendServer {
                         String[] params = query.split("=");
                         if (params.length >= 2 && params[0].equals("comando")) {
                             String command = URLDecoder.decode(params[1], StandardCharsets.UTF_8);
-                            String result = "Hello"; //CommandParser.parseAndExecute(command);
+                         
+                            String result = "Hello"; //ReflexCalulator.parseAndExecute(command);
                             response = "HTTP/1.1 200 OK\r\n" +
                                       "Content-Type: application/json\r\n" +
                                       "Access-Control-Allow-Origin: *\r\n" +
